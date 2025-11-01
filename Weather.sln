@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.13.35828.75 d17.13
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Weather", "Weather\Weather.csproj", "{09F05FF7-6E96-4A32-840C-36ACE0F43EEA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WaetherTest", "WaetherTest\WaetherTest.csproj", "{5435C94B-D836-4D06-ADD3-9D313F74B50E}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{09F05FF7-6E96-4A32-840C-36ACE0F43EEA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{09F05FF7-6E96-4A32-840C-36ACE0F43EEA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{09F05FF7-6E96-4A32-840C-36ACE0F43EEA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{09F05FF7-6E96-4A32-840C-36ACE0F43EEA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5435C94B-D836-4D06-ADD3-9D313F74B50E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5435C94B-D836-4D06-ADD3-9D313F74B50E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5435C94B-D836-4D06-ADD3-9D313F74B50E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5435C94B-D836-4D06-ADD3-9D313F74B50E}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {202E232B-1071-482E-AB8F-DE07E53C7BAF}
+	EndGlobalSection
+EndGlobal
