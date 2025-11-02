@@ -9,23 +9,21 @@ namespace WeatherApi.Services;
 
 public class OpenWeatherService : IOpenWeatherService
 {
-    private readonly HttpClient _http;
-    private readonly IConfiguration _config;
+    private readonly IHttpClientFactory _httpClientFactory;
     private readonly string _apiKey;
 
-    public OpenWeatherService(HttpClient http, IConfiguration config)
+    public OpenWeatherService(IHttpClientFactory httpClientFactory, IConfiguration config)
     {
-        _http = http;
-        _config = config;
+        _httpClientFactory = httpClientFactory;
         _apiKey = config["OpenWeather:ApiKey"]
-           ?? throw new InvalidOperationException("OpenWeather:ApiKey is not configured. Set it in appsettings.json or environment variables.");
+            ?? throw new InvalidOperationException("OpenWeather:ApiKey is not configured.");
     }
 
-    public async Task<CityEnvironmentalData?> GetCityEnvironmentalDataAsync(string city)
+    public async Task<CityEnvironmentalData?> GetCityEnvironmentalDataAsync(string city,CancellationToken cancellationToken)
     {
 
 
-        var geocode =await GetGeocodingAsync(city);
+        var geocode =await GetGeocodingAsync(city,cancellationToken);
         if (geocode == null || !geocode.Any())
             return null;
 
@@ -34,8 +32,8 @@ public class OpenWeatherService : IOpenWeatherService
         double lon = first.Lon;
 
 
-        var weather = await GetWeatherAsync(lat, lon);
-        var air = await GetAirPollutionAsync(lat, lon);
+        var weather = await GetWeatherAsync(lat, lon,cancellationToken);
+        var air = await GetAirPollutionAsync(lat, lon, cancellationToken);
 
         var data = new CityEnvironmentalData
         {
@@ -53,25 +51,28 @@ public class OpenWeatherService : IOpenWeatherService
     }
 
 
-    private async Task<AirPollutionResponse?> GetAirPollutionAsync(double lat, double lon)
-    {      
+    private async Task<AirPollutionResponse?> GetAirPollutionAsync(double lat, double lon,CancellationToken cancellationToken)
+    {
+        var client = _httpClientFactory.CreateClient();
         var airUrl = $"https://api.openweathermap.org/data/2.5/air_pollution?lat={lat}&lon={lon}&appid={_apiKey}";
-        var air = await _http.GetFromJsonAsync<AirPollutionResponse>(airUrl);
+        var air = await client.GetFromJsonAsync<AirPollutionResponse>(airUrl, cancellationToken);
         return air;
     }
 
-    private async Task<WeatherResponse?> GetWeatherAsync(double lat, double lon)
-    {    
+    private async Task<WeatherResponse?> GetWeatherAsync(double lat, double lon,CancellationToken cancellationToken)
+    {
+        var client = _httpClientFactory.CreateClient();
         var weatherUrl = $"https://api.openweathermap.org/data/2.5/weather?lat={lat}&lon={lon}&units=metric&appid={_apiKey}";
-        var weather = await _http.GetFromJsonAsync<WeatherResponse>(weatherUrl);
+        var weather = await client.GetFromJsonAsync<WeatherResponse>(weatherUrl, cancellationToken);
         return weather;
     }
 
-    private async Task<List<GeocodingResponse?>> GetGeocodingAsync(string city)
+    private async Task<List<GeocodingResponse?>> GetGeocodingAsync(string city,CancellationToken cancellationToken)
     {
-       
+        var client = _httpClientFactory.CreateClient();
+
         var geocodeUrl = $"https://api.openweathermap.org/geo/1.0/direct?q={HttpUtility.UrlEncode(city)}&limit=1&appid={_apiKey}";
-        var geocode = await _http.GetFromJsonAsync<List<GeocodingResponse>>(geocodeUrl);
+        var geocode = await client.GetFromJsonAsync<List<GeocodingResponse>>(geocodeUrl, cancellationToken);
         return geocode;
     }
 }

@@ -13,14 +13,14 @@ public class WeatherController : ControllerBase
     }
 
     [HttpGet("{city}")]
-    public async Task<IActionResult> Get(string city)
+    public async Task<IActionResult> Get(string city, CancellationToken cancellationToken)
     {
         if (string.IsNullOrWhiteSpace(city))
             return BadRequest(new { error = "City is required" });
 
         try
         {
-            var result = await _openWeather.GetCityEnvironmentalDataAsync(city);
+            var result = await _openWeather.GetCityEnvironmentalDataAsync(city,cancellationToken);
             if (result == null) 
             return NotFound(new { error = "City not found or no data available" });
             return Ok(result);

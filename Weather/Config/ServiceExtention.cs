@@ -10,7 +10,7 @@ namespace Weather.Config
         public static void AddService(this IServiceCollection serviceCollection)
         {
             serviceCollection.AddScoped<IOpenWeatherService,OpenWeatherService>();
-            serviceCollection.AddHttpClient<IOpenWeatherService, OpenWeatherService>();
+            serviceCollection.AddHttpClient();
         }
     }
 }

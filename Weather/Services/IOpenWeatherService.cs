@@ -4,7 +4,7 @@ namespace Weather.Services
 {
     public interface IOpenWeatherService
     {
-        Task<CityEnvironmentalData?> GetCityEnvironmentalDataAsync(string city);
+        Task<CityEnvironmentalData?> GetCityEnvironmentalDataAsync(string city, CancellationToken cancellationToken);
     }
 
 }
