@@ -26,10 +26,9 @@ namespace Weather.Tests
                 )
                 .ReturnsAsync((HttpRequestMessage request, CancellationToken _) =>
                 {
-                 
                     var url = request.RequestUri!.ToString();
-
                     var matched = fakeResponses.FirstOrDefault(f => url.Contains(f.Key));
+
                     if (matched.Key == null)
                     {
                         return new HttpResponseMessage(HttpStatusCode.NotFound)
@@ -88,13 +87,16 @@ namespace Weather.Tests
 
             var httpClient = CreateMockHttpClient(fakeResponses);
 
+            var factoryMock = new Mock<IHttpClientFactory>();
+            factoryMock.Setup(f => f.CreateClient(It.IsAny<string>())).Returns(httpClient);
+            CancellationToken cancellationToken = new CancellationToken();  
             var configMock = new Mock<IConfiguration>();
             configMock.Setup(c => c["OpenWeather:ApiKey"]).Returns("fake-api-key");
 
-            var service = new OpenWeatherService(httpClient, configMock.Object);
+            var service = new OpenWeatherService(factoryMock.Object, configMock.Object);
 
             // Act
-            var result = await service.GetCityEnvironmentalDataAsync("Tehran");
+            var result = await service.GetCityEnvironmentalDataAsync("Tehran", cancellationToken);
 
             // Assert
             Assert.NotNull(result);
@@ -118,13 +120,17 @@ namespace Weather.Tests
             };
 
             var httpClient = CreateMockHttpClient(fakeResponses);
+
+            var factoryMock = new Mock<IHttpClientFactory>();
+            factoryMock.Setup(f => f.CreateClient(It.IsAny<string>())).Returns(httpClient);
+            CancellationToken cancellationToken = new CancellationToken();
             var configMock = new Mock<IConfiguration>();
             configMock.Setup(c => c["OpenWeather:ApiKey"]).Returns("fake-api-key");
 
-            var service = new OpenWeatherService(httpClient, configMock.Object);
+            var service = new OpenWeatherService(factoryMock.Object, configMock.Object);
 
             // Act
-            var result = await service.GetCityEnvironmentalDataAsync("UnknownCity");
+            var result = await service.GetCityEnvironmentalDataAsync("UnknownCity", cancellationToken   );
 
             // Assert
             Assert.Null(result);
